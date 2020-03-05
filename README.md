@@ -1,5 +1,41 @@
-# River-Forecast-App
-This is a project to model river flow data and forecast into the future. 
+## River Data Visulaizer
+
+- Bryce Shaw
+- James Chen
+
+### Abstract
+
+This project is intended to gather all the data required for a river user to understand the state of a river drainage. It will ingest data from the government of Alberta environmental monitoring stations, and display related trends on a dashboard. 
+
+This will be useful for recreational river users (kayakers, canoers, fisher folk), commercial river operators (whitewater rafting), and town planners interested in flood forecasting. 
+
+The app will overlay selected trends for customizable time ranges, and offer group trends based on location concerned. 
+
+### Design strategy
+
+We will use python for the backend, Django for the frontend. We will store data in database (which database?), which will be local to the application. Requested data will be populated into the database and cached. If requested data is partially available in the database, only the missing parts will be scraped from online sources. 
+
+### Design Unknowns
+
+- How do we build a front end
+- how do we visualise data 
+- 
+
+### Implementation Plan
+
+- Data retrieval. Scrapes provided datasource for specified date ranges.
+- real time retriver
+- Database Interface
+- Database
+- Frontend
+- Visualization module -> displays requested data
+
+### Evaluation
+
+- Does it work?
+- How laggy is it?
+- Are we able to use big data tools to create a forecast trend?
+
 
 ## Project Components
 - Database
