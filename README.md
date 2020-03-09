@@ -13,12 +13,13 @@ The app will overlay selected trends for customizable time ranges, and offer gro
 
 ### Design strategy
 
-We will use python for the backend, Django for the frontend. We will store data in an SQLite database, which will be local to the application. Requested data will be populated into the database and cached. If requested data is partially available in the database, only the missing parts will be scraped from online sources. 
+We will use python or node.js for the backend, React for the frontend. We will store data in a MySQL database, hosted in a docker container on a Cybera VM. Data will be added to the database using a webscraping function monitoring the alberta rivers webpage. We will investigate the feasibility of passing this into our database using a publish and subscribe message broker (AWS IoT core MQTT). The frontend webpage will submit query parameters to the backend, which will create queries to be sent to the database. The response will be parsed and made available to the frontend compenents. 
 
 ### Design Unknowns
 
 - Designing a interactable front end which contains a visualization module.
 - Visualize data gathered in the database using graphs and plots.
+- Feasibility and suitability of MQTT message broker in this use case.
 
 ### Implementation Plan
 
@@ -49,7 +50,7 @@ We will use python for the backend, Django for the frontend. We will store data 
 - Apache Spark ML
 - MySQL
 - Frontend using react.js
-- Data import functions using java or Node.js
+- Data import functions using python or Node.js
 
 ## ML model structure
 - We will transform the data such that each point (hourly data, potentially down-sampled depending on computational limits) includes data from the last 14 days (potentially quite a bit less, depending on the drainage size) of data points.
