@@ -47,7 +47,7 @@ We will use python for the backend, Django for the frontend. We will store data 
 
 ## Frameworks
 - Apache Spark ML
-- SQLite
+- MySQL
 - Frontend using react.js
 - Data import functions using java or Node.js
 
