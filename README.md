@@ -49,6 +49,7 @@ We will use python or node.js for the backend, React for the frontend. We will s
 ## Frameworks
 - Apache Spark ML
 - MySQL
+- AWS IoT Core MQTT
 - Frontend using react.js
 - Data import functions using python or Node.js
 
