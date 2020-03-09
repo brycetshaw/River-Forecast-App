@@ -11,6 +11,10 @@ This will be useful for recreational river users (kayakers, canoers, fisher folk
 
 The app will overlay selected trends for customizable time ranges, and offer group trends based on location concerned. 
 
+### Project Scenario & Goals
+
+The goal of this is to group together all available data trends that are available to determine the state of a river drainage. A user (person who in interested in understanding the drainage details) will be able to view all the information available to them in one place, select time frame window, scale trend axis, and view predictions (if that part gets implemented) 
+
 ### Design strategy
 
 We will use python or node.js for the backend, React for the frontend. We will store data in a MySQL database, hosted in a docker container on a Cybera VM. Data will be added to the database using a webscraping function monitoring the alberta rivers webpage. We will investigate the feasibility of passing this into our database using a publish and subscribe message broker (AWS IoT core MQTT). The frontend webpage will submit query parameters to the backend, which will create queries to be sent to the database. The response will be parsed and made available to the frontend compenents. 
