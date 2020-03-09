@@ -69,6 +69,7 @@ We will use python or node.js for the backend, React for the frontend. We will s
 - Cloud Cover
 
 ## Data Sources
+Alberta data is availible at https://rivers.alberta.ca/
 - Snow pillow 
 - River Flow 
 - Weather 
