@@ -81,5 +81,6 @@ Alberta data is availible at https://rivers.alberta.ca/
 - Elbow River
 - Stikine River
 
+https://nbviewer.jupyter.org/github/jvns/pandas-cookbook/blob/master/cookbook/Chapter%205%20-%20Combining%20dataframes%20and%20scraping%20Canadian%20weather%20data.ipynb
 
 
