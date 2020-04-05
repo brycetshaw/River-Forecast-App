@@ -1,0 +1,39 @@
+import mysql
+from mysql.connector import Error
+
+
+def create_db_connection():
+    try:
+        print("trying")
+        connection = mysql.connector.connect(host='162.246.156.171',
+                                             database='riverapp',
+                                             user='riverapp',
+                                             password='riverapp',
+                                             auth_plugin='mysql_native_password')
+        print("connection attempted")
+        if connection.is_connected():
+            db_Info = connection.get_server_info()
+            print("Connected to MySQL Server version ", db_Info)
+            cursor = connection.cursor()
+            cursor.execute("select database();")
+            record = cursor.fetchone()
+            cursor.close()
+            print(f"You're connected to database: {record}")
+            return connection
+
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+
+def main():
+
+    print('hello')
+    db_connection = create_db_connection()
+
+    if db_connection.is_connected():
+        db_connection.close()
+        print("MySQL connection is closed")
+
+
+if __name__ == '__main__':
+    main()
