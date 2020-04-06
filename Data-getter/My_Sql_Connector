@@ -16,8 +16,6 @@ def create_db_connection():
         #
         # conn = pymysql.connect(db_host,db_user,db_pass,db_name, use_unicode=True, charset="utf8")
 
-
-
         connection = mysql.connector.connect(host='162.246.156.171',
                                              database='riverapp',
                                              user='riverapp',
@@ -40,9 +38,10 @@ def create_db_connection():
 
 
 def main():
-
     print('hello')
     db_connection = create_db_connection()
+
+
 
     if db_connection.is_connected():
         db_connection.close()
