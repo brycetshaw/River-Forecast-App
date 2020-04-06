@@ -5,11 +5,25 @@ from mysql.connector import Error
 def create_db_connection():
     try:
         print("trying")
+
+        # TODO Create ENV variables to handle database credentials in a correct way.
+        # I think I need to use https://direnv.net/
+        # db_host = env(DB_HOST, 'localhost')
+        # db_port = env.int(DB_PORT, 3306)
+        # db_user = env(DB_USER)
+        # db_pass = env(DB_PASS)
+        # db_name = env(DB_NAME)
+        #
+        # conn = pymysql.connect(db_host,db_user,db_pass,db_name, use_unicode=True, charset="utf8")
+
+
+
         connection = mysql.connector.connect(host='162.246.156.171',
                                              database='riverapp',
                                              user='riverapp',
                                              password='riverapp',
                                              auth_plugin='mysql_native_password')
+
         print("connection attempted")
         if connection.is_connected():
             db_Info = connection.get_server_info()
