@@ -64,11 +64,11 @@ def checkTableExists(dbcon, tablename):
     return False
 
 
-def addData(db_connection, sensortag, data, data_type):
-    if not checkTableExists(db_connection, sensortag):
-        db_cursor = db_connection.cursor()
-        db_cursor.excecute(f"")
-        sql = f"INSERT INTO "
+# def addData(db_connection, sensortag, data, data_type):
+#     if not checkTableExists(db_connection, sensortag):
+#         db_cursor = db_connection.cursor()
+#         db_cursor.excecute(f"")
+#         sql = f"INSERT INTO "
 
 
 def create_data_group_table(db_connection):
@@ -77,7 +77,9 @@ def create_data_group_table(db_connection):
               f"entry_id INT AUTO_INCREMENT PRIMARY KEY," \
               f"sensor_id VARCHAR(255) NOT NULL," \
               f"data_group_id VARCHAR(255)," \
-              f"table_type VARCHAR(255) NOT NULL" \
+              f"table_type VARCHAR(255) NOT NULL," \
+              f"start_date DATETIME," \
+              f"end_date DATETIME" \
               f")"
         cursor = db_connection.cursor()
         cursor.execute(sql)
@@ -117,7 +119,7 @@ def add_snow_sensor_table(db_connection, sensor_id, data_group_id, table_type):
     sql = f"CREATE TABLE IF NOT EXISTS {sensor_id} (" \
           f"time DATETIME NOT NULL PRIMARY KEY," \
           f"height DOUBLE," \
-          f"temperature DOUBLE" \
+          f"temperature_at_snowpillow DOUBLE" \
           f")"
 
     sql2 = f"INSERT INTO data_group (sensor_id, data_group_id, table_type)" \
@@ -147,7 +149,7 @@ def add_flow_value(cursor, sensor_id, timestamp, flow_rate):
 
 
 def add_snow_value(cursor, sensor_id, timestamp, height, temperature):
-    sql = f"INSERT INTO {sensor_id} (time, height, temperature)" \
+    sql = f"INSERT INTO {sensor_id} (time, height, temperature_at_snowpillow)" \
           f"VALUES ('{pd.to_datetime(timestamp).strftime('%Y-%m-%d %H:%M:%S')}', {height}, {temperature})"
     try:
         cursor.execute(sql)
@@ -220,11 +222,46 @@ def import_snowpack_from_csv(db_connection):
     db_connection.commit()
     return data_group_id
 
+
+def get_sensors(db_connection):
+    sql = "select sensor_id from data_group"
+
+    cursor = db_connection.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    cursor.close()
+    return [x[0] for x in result]
+
+# TODO sensor bound needs to populate data group start and end date fields.
+def get_sensor_bound(db_connection, sensor):
+    sql1 = f"SELECT MAX(time) from {sensor}"
+    sql2 = f"SELECT MIN(time) from {sensor}"
+    cursor = db_connection.cursor()
+    cursor.execute(sql1)
+    result = cursor.fetchall()
+    cursor.execute(sql2)
+    result.append(cursor.fetchall())
+    cursor.close()
+    return [x[0] for x in result]
+
+def populate_data_group_bounds(db_connection):
+    db_connection = create_db_connection()
+    cursor = db_connection.cursor()
+    sensors = get_sensors(db_connection)
+    result = pd.DataFrame()
+    for sensor in sensors:
+        temp = get_sensor_bound(db_connection, sensor)
+        print(temp)
+
+
+
+
 def main():
     db_connection = create_db_connection()
-    create_data_group_table(db_connection)
-    data_group_id = import_river_from_csv(db_connection)
-    import_snowpack_from_csv(db_connection)
+    # create_data_group_table(db_connection)
+    # data_group_id = import_river_from_csv(db_connection)
+    # import_snowpack_from_csv(db_connection)
+    populate_data_group_bounds(db_connection)
     if db_connection.is_connected():
         db_connection.close()
         print("MySQL connection is closed")
