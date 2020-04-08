@@ -113,8 +113,7 @@ def add_sensor_table(db_connection, sensor_id, data_group_id, table_type):
 
 
 def add_snow_sensor_table(db_connection, sensor_id, data_group_id, table_type):
-    # Creates a table (if a table with the label of sensor_id doesn't already exist)
-    # and adds a row into the datagroup table with the sensor details.
+
     sql = f"CREATE TABLE IF NOT EXISTS {sensor_id} (" \
           f"time DATETIME NOT NULL PRIMARY KEY," \
           f"height DOUBLE," \
@@ -221,13 +220,10 @@ def import_snowpack_from_csv(db_connection):
     db_connection.commit()
     return data_group_id
 
-    # flow.to_sql(con=db_connection, if_exists='replace', flavor='mysql')
-
-
 def main():
     db_connection = create_db_connection()
-    # create_data_group_table(db_connection)
-    # data_group_id = import_river_from_csv(db_connection)
+    create_data_group_table(db_connection)
+    data_group_id = import_river_from_csv(db_connection)
     import_snowpack_from_csv(db_connection)
     if db_connection.is_connected():
         db_connection.close()
