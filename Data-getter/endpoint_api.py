@@ -61,17 +61,7 @@ def query_sensor(db_connection, sensor, start, end):
     return result_df
 
 
-def get_datagroups():
-    sql = f"select data_group_id from data_group"
 
-    # cursor = create_db_connection().cursor()
-    # cursor.execute(sql)
-    # result = cursor.fetchall()
-    # return [x[0] for x in result]
-    db_connection = create_db_connection()
-    result = pd.read_sql(sql, db_connection).drop_duplicates().to_csv(index=False)
-    db_connection.close()
-    return result
 
 def get_sensor_list(db_connection, data_group):
     sql = f"SELECT * FROM data_group WHERE data_group_id == '{data_group}'"
@@ -84,7 +74,8 @@ def get_sensor_list(db_connection, data_group):
     # return pd.read_sql(sql, create_db_connection()).to_csv(index=False)
 
 
-def query_database( data_group, start_time, end_time):
+def query_database(data_group, start_time, end_time):
+    # Public function
     # returns csv result with all sensors in data group, for the requested time duration.
     db_connection = create_db_connection()
     sensors = get_sensors_in_datagroup(db_connection, data_group)
@@ -100,6 +91,7 @@ def query_database( data_group, start_time, end_time):
     return result.to_csv()
 
 def get_sensors_list(datagroup):
+    # public function
     sql = f"select sensor_id from data_group where data_group_id='{datagroup}'"
     db_connection = create_db_connection()
     cursor = db_connection.cursor()
@@ -107,6 +99,19 @@ def get_sensors_list(datagroup):
     result = cursor.fetchall()
     cursor.close()
     result = [x[0] for x in result]
+    return result
+
+def get_datagroups():
+
+    sql = f"select data_group_id from data_group"
+
+    # cursor = create_db_connection().cursor()
+    # cursor.execute(sql)
+    # result = cursor.fetchall()
+    # return [x[0] for x in result]
+    db_connection = create_db_connection()
+    result = pd.read_sql(sql, db_connection).drop_duplicates().to_csv(index=False)
+    db_connection.close()
     return result
 
 def main():
