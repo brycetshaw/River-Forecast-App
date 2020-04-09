@@ -1,0 +1,105 @@
+import json
+from flask import Flask, request
+from flask_restful import Api, Resource, reqparse
+import sys
+import json
+import os
+
+import endpoint_api
+
+print('hello')
+resp = endpoint_api.get_datagroups()
+print('hell0' + json.loads(resp))
+app = Flask(__name__)
+api = Api(app)
+
+from flask import request
+
+
+@app.route('/get-data/<string:name>', methods=['POST'])
+def events():
+    event_data = request.json
+
+
+# server_return = request.post(
+#     server_ip,
+#     headers=headers,
+#     data=json.dumps(event_data)
+# )
+
+users = [
+    {
+        "name": "Nicholas",
+        "age": 42,
+        "occupation": "Network Engineer"
+    },
+    {
+        "name": "Elvin",
+        "age": 32,
+        "occupation": "Doctor"
+    },
+    {
+        "name": "Jass",
+        "age": 22,
+        "occupation": "Web Developer"
+    }
+]
+
+
+class RiverDB(Resource):
+    def get(self, name):
+
+        # data =
+
+        for user in users:
+            if (name == user["name"]):
+                return user, 200
+        return "User not found", 404
+
+    def post(self, name):
+        parser = reqparse.RequestParser()
+        parser.add_argument("age")
+        parser.add_argument("occupation")
+        args = parser.parse_args()
+
+        for user in users:
+            if (name == user["name"]):
+                return "User with name {} already exists".format(name), 400
+
+        user = {
+            "name": name,
+            "age": args["age"],
+            "occupation": args["occupation"]
+        }
+        users.append(user)
+        return user, 201
+
+    def put(self, name):
+        parser = reqparse.RequestParser()
+        parser.add_argument("age")
+        parser.add_argument("occupation")
+        args = parser.parse_args()
+
+        for user in users:
+            if (name == user["name"]):
+                user["age"] = args["age"]
+                user["occupation"] = args["occupation"]
+                return user, 200
+
+        user = {
+            "name": name,
+            "age": args["age"],
+            "occupation": args["occupation"]
+        }
+        users.append(user)
+        return user, 201
+
+    def delete(self, name):
+        global users
+        users = [user for user in users if user["name"] != name]
+        return "{} is deleted.".format(name), 200
+
+
+api.add_resource(RiverDB, "/user/<json:name>")
+
+app.run(debug=True)

@@ -11,6 +11,7 @@ import re
 
 
 def create_db_connection():
+    print('get data connection')
     try:
 
         # TODO Create ENV variables to handle database credentials in a correct way.
@@ -28,10 +29,11 @@ def create_db_connection():
                                              user='riverapp',
                                              password='riverapp',
                                              auth_plugin='mysql_native_password')
+        print('maybe got connection')
 
         if connection.is_connected():
             db_Info = connection.get_server_info()
-            # print("Connected to MySQL Server version ", db_Info)
+            print("Connected to MySQL Server version ", db_Info)
             # cursor = connection.cursor()
             # cursor.execute("select database();")
             # record = cursor.fetchone()
@@ -102,7 +104,7 @@ def get_sensors_list(datagroup):
     return result
 
 def get_datagroups():
-
+    print('hello from data groups')
     sql = f"select data_group_id from data_group"
 
     # cursor = create_db_connection().cursor()
@@ -110,7 +112,8 @@ def get_datagroups():
     # result = cursor.fetchall()
     # return [x[0] for x in result]
     db_connection = create_db_connection()
-    result = pd.read_sql(sql, db_connection).drop_duplicates().to_csv(index=False)
+    result = pd.read_sql(sql, db_connection).drop_duplicates().to_csv(index=False).to_json(orient='split')
+    print(result)
     db_connection.close()
     return result
 
