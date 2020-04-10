@@ -263,6 +263,8 @@ def populate_data_group_bounds(db_connection):
 
 
 def main():
+    # This file is ugly, but it populates a database
+
     db_connection = create_db_connection()
     create_data_group_table(db_connection)
     data_group_id = import_river_from_csv(db_connection)

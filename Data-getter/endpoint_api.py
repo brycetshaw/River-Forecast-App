@@ -4,7 +4,7 @@ from itertools import islice
 import mysql
 from mysql.connector import Error
 import pandas as pd
-from datetime import datetime
+import datetime
 import os
 import pytz
 import re
@@ -53,7 +53,6 @@ def create_db_connection():
 
 def get_sensors_in_datagroup(db_connection, datagroup):
     sql = f"select sensor_id from data_group where data_group_id='{datagroup}'"
-
     cursor = db_connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
@@ -63,12 +62,7 @@ def get_sensors_in_datagroup(db_connection, datagroup):
 
 def query_sensor(db_connection, sensor, start, end):
     sql = f"SELECT * from {sensor} WHERE time > '{start}' && time < '{end}'"
-    # cursor.execute(sql)
-    # result = cursor.fetchall()
-    result_df = pd.read_sql(sql, db_connection)
-    return result_df
-
-
+    return pd.read_sql(sql, db_connection)
 
 
 def get_sensor_list(db_connection, data_group):
@@ -83,8 +77,14 @@ def get_sensor_list(db_connection, data_group):
 
 
 def query_database(data_group, start_time, end_time):
-    # Public function
-    # returns csv result with all sensors in data group, for the requested time duration.
+    # Front End API
+    try:
+        if not isinstance(start_time, datetime.date):
+            start_time = datetime.datetime.fromtimestamp(int(start_time) / 1E3)
+            end_time = datetime.datetime.fromtimestamp(int(end_time) / 1E3)
+    except:
+        print("caught a datetime conversion error. this is expected")
+
     db_connection = create_db_connection()
     sensors = get_sensors_in_datagroup(db_connection, data_group)
     result = pd.DataFrame()
@@ -96,32 +96,26 @@ def query_database(data_group, start_time, end_time):
         result = result.merge(temp, how='outer', left_index=True, right_index=True, suffixes=('', '_y'))
         result.drop(list(result.filter(regex='_y$')), axis=1, inplace=True)
     db_connection.close()
-    return result.to_csv()
+    return result.to_json(orient='split', index=False)
+
 
 def get_sensors_list(datagroup):
-    # public function
-    sql = f"select sensor_id from data_group where data_group_id='{datagroup}'"
+    # Front end API
+    sql = f"select sensor_id, start_date, end_date from data_group where data_group_id='{datagroup}'"
     db_connection = create_db_connection()
-    cursor = db_connection.cursor()
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    cursor.close()
-    result = [x[0] for x in result]
-    return result
-
-def get_datagroups():
-    print('hello from data groups')
-    sql = f"select data_group_id from data_group"
-
-    # cursor = create_db_connection().cursor()
-    # cursor.execute(sql)
-    # result = cursor.fetchall()
-    # return [x[0] for x in result]
-    db_connection = create_db_connection()
-    result = pd.read_sql(sql, db_connection).drop_duplicates().to_json(orient='split')
-    print(result)
+    result = pd.read_sql(sql, db_connection).drop_duplicates().to_json(orient='split', index=False)
     db_connection.close()
     return result
+
+
+def get_datagroups():
+    # Front End API
+    sql = f"select data_group_id from data_group"
+    db_connection = create_db_connection()
+    result = pd.read_sql(sql, db_connection).drop_duplicates().to_json(orient='split', index=False)
+    db_connection.close()
+    return result
+
 
 def main():
     print(get_datagroups())

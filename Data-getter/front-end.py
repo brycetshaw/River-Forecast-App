@@ -1,4 +1,5 @@
 import requests
+from flask import jsonify
 
 
 def main():
@@ -6,8 +7,7 @@ def main():
     port = 5000
     url = f"http://{host}:{port}/get-data"
 
-    params = {'data_group': "SPILLIMACHEEN RIVER NEAR SPILLIMACHEEN", 'start_time': '2020-02-15 19:00:00',
-              'start_time': '2020-02-19 17:00:00'}
+    params = jsonify({'data_group': "SPILLIMACHEEN RIVER NEAR SPILLIMACHEEN", 'start_time': '2020-02-15 19:00:00', 'end_time': '2020-02-19 17:00:00'})
 
     r = requests.get(url, params)
 

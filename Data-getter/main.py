@@ -1,105 +1,36 @@
 import json
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_restful import Api, Resource, reqparse
 import sys
 import json
 import os
 
 import endpoint_api
+from flask import request
 
-print('hello')
-resp = endpoint_api.get_datagroups()
-print(json.loads(resp))
 app = Flask(__name__)
 api = Api(app)
 
-from flask import request
+class Sensor_list(Resource):
+    def get(self, data_group):
+        print(data_group)
+        return endpoint_api.get_sensors_list(data_group)
 
 
-@app.route('/get-data/<string:name>', methods=['POST'])
-def events():
-    event_data = request.json
+class Data_group_list(Resource):
+    def get(self):
+        return endpoint_api.get_datagroups()
 
 
-# server_return = request.post(
-#     server_ip,
-#     headers=headers,
-#     data=json.dumps(event_data)
-# )
-
-users = [
-    {
-        "name": "Nicholas",
-        "age": 42,
-        "occupation": "Network Engineer"
-    },
-    {
-        "name": "Elvin",
-        "age": 32,
-        "occupation": "Doctor"
-    },
-    {
-        "name": "Jass",
-        "age": 22,
-        "occupation": "Web Developer"
-    }
-]
+class Query_group(Resource):
+    def get(self, user_submission):
+        print(user_submission)
+        parsed_input = user_submission.split('|')
+        return endpoint_api.query_database(parsed_input[0], parsed_input[1], parsed_input[2])
 
 
-class RiverDB(Resource):
-    def get(self, name):
-
-        # data =
-
-        for user in users:
-            if (name == user["name"]):
-                return user, 200
-        return "User not found", 404
-
-    def post(self, name):
-        parser = reqparse.RequestParser()
-        parser.add_argument("age")
-        parser.add_argument("occupation")
-        args = parser.parse_args()
-
-        for user in users:
-            if (name == user["name"]):
-                return "User with name {} already exists".format(name), 400
-
-        user = {
-            "name": name,
-            "age": args["age"],
-            "occupation": args["occupation"]
-        }
-        users.append(user)
-        return user, 201
-
-    def put(self, name):
-        parser = reqparse.RequestParser()
-        parser.add_argument("age")
-        parser.add_argument("occupation")
-        args = parser.parse_args()
-
-        for user in users:
-            if (name == user["name"]):
-                user["age"] = args["age"]
-                user["occupation"] = args["occupation"]
-                return user, 200
-
-        user = {
-            "name": name,
-            "age": args["age"],
-            "occupation": args["occupation"]
-        }
-        users.append(user)
-        return user, 201
-
-    def delete(self, name):
-        global users
-        users = [user for user in users if user["name"] != name]
-        return "{} is deleted.".format(name), 200
-
-
-api.add_resource(RiverDB, "/user/<string:name>")
-
-app.run(debug=True)
+api.add_resource(Sensor_list, "/sensors/<string:data_group>")
+api.add_resource(Data_group_list, "/data-groups/")
+api.add_resource(Query_group, "/query/<string:user_submission>")
+if __name__ == '__main__':
+    app.run(debug=True)
