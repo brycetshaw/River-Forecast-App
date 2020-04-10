@@ -22,12 +22,18 @@ def create_db_connection():
         #
         # conn = pymysql.connect(db_host,db_user,db_pass,db_name, use_unicode=True, charset="utf8")
 
-        connection = mysql.connector.connect(host='162.246.156.171',
+        # connection = mysql.connector.connect(host='162.246.156.171',
+        #                                      database='riverapp',
+        #                                      user='riverapp',
+        #                                      password='riverapp',
+        #                                      auth_plugin='mysql_native_password')
+        # connection = mysql.connector.connect(host='localhost',
+        #                                      )
+        connection = mysql.connector.connect(host='localhost',
                                              database='riverapp',
                                              user='riverapp',
                                              password='riverapp',
                                              auth_plugin='mysql_native_password')
-
         print("connection attempted")
         if connection.is_connected():
             db_Info = connection.get_server_info()
@@ -258,9 +264,9 @@ def populate_data_group_bounds(db_connection):
 
 def main():
     db_connection = create_db_connection()
-    # create_data_group_table(db_connection)
-    # data_group_id = import_river_from_csv(db_connection)
-    # import_snowpack_from_csv(db_connection)
+    create_data_group_table(db_connection)
+    data_group_id = import_river_from_csv(db_connection)
+    import_snowpack_from_csv(db_connection)
     populate_data_group_bounds(db_connection)
     if db_connection.is_connected():
         db_connection.close()

@@ -28,9 +28,9 @@ docker exec -it mysql01 mysql -u root -p
 
 !3N(eHezZoJdecYtoRc4rJamYnE
 
-CREATE USER 'riverapp'@'172.219.147.63' IDENTIFIED BY 'riverapp';
+CREATE USER 'riverapp'@'localhost' IDENTIFIED BY 'riverapp';
 
-GRANT ALL PRIVILEGES ON *.* TO 'riverapp'@'172.219.147.63' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'riverapp'@'localhost' WITH GRANT OPTION;
 
 ```sql
 docker ps -a
@@ -38,8 +38,8 @@ docker start river-app-front-end
 docker exec -it mysql01 mysql -u root -p
 !3N(eHezZoJdecYtoRc4rJamYnE
 
-CREATE USER 'riverapp'@'172.103.187.218' IDENTIFIED BY 'riverapp';
-GRANT ALL PRIVILEGES ON *.* TO 'riverapp'@'localhost' WITH GRANT OPTION;
+CREATE USER 'riverapp'@'%' IDENTIFIED BY 'riverapp';
+GRANT ALL PRIVILEGES ON *.* TO 'riverapp'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 ```
 

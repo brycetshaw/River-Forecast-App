@@ -9,7 +9,7 @@ import endpoint_api
 
 print('hello')
 resp = endpoint_api.get_datagroups()
-print('hell0' + json.loads(resp))
+print(json.loads(resp))
 app = Flask(__name__)
 api = Api(app)
 
@@ -100,6 +100,6 @@ class RiverDB(Resource):
         return "{} is deleted.".format(name), 200
 
 
-api.add_resource(RiverDB, "/user/<json:name>")
+api.add_resource(RiverDB, "/user/<string:name>")
 
 app.run(debug=True)

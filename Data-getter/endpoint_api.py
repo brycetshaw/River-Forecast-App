@@ -24,7 +24,13 @@ def create_db_connection():
         #
         # conn = pymysql.connect(db_host,db_user,db_pass,db_name, use_unicode=True, charset="utf8")
 
-        connection = mysql.connector.connect(host='162.246.156.171',
+        # connection = mysql.connector.connect(host='162.246.156.171',
+        #                                      database='riverapp',
+        #                                      user='riverapp',
+        #                                      password='riverapp',
+        #                                      auth_plugin='mysql_native_password')
+
+        connection = mysql.connector.connect(host='localhost',
                                              database='riverapp',
                                              user='riverapp',
                                              password='riverapp',
@@ -34,11 +40,11 @@ def create_db_connection():
         if connection.is_connected():
             db_Info = connection.get_server_info()
             print("Connected to MySQL Server version ", db_Info)
-            # cursor = connection.cursor()
-            # cursor.execute("select database();")
-            # record = cursor.fetchone()
-            # cursor.close()
-            # print(f"You're connected to database: {record}")
+            cursor = connection.cursor()
+            cursor.execute("select database();")
+            record = cursor.fetchone()
+            cursor.close()
+            print(f"You're connected to database: {record}")
             return connection
 
     except Error as e:
@@ -112,7 +118,7 @@ def get_datagroups():
     # result = cursor.fetchall()
     # return [x[0] for x in result]
     db_connection = create_db_connection()
-    result = pd.read_sql(sql, db_connection).drop_duplicates().to_csv(index=False).to_json(orient='split')
+    result = pd.read_sql(sql, db_connection).drop_duplicates().to_json(orient='split')
     print(result)
     db_connection.close()
     return result
